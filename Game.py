@@ -31,9 +31,10 @@ RED_SPACESHIP_IMAGE = pygame.image.load(
 RED_SPACESHIP = pygame.transform.rotate (pygame.transform.scale(
     RED_SPACESHIP_IMAGE, (SPACESHIP_WIDTH, SPACESHIP_HEIGHT)), 270)
 
+SPACE = pygame.transform.scale(pygame.image.load(os.path.join('ASSETS', 'space.png')), (WIDTH, HEIGHT))
 
 def draw_window(red, yellow, red_bullets, yellow_bullets):
-    WIN.fill(WHITE)
+    WIN.blit(SPACE, (0, 0))
     pygame.draw.rect(WIN, BLACK, BORDER)
     WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
     WIN.blit(RED_SPACESHIP, (red.x, red.y))
@@ -74,13 +75,17 @@ def handle_bullets(yellow_bullets, red_bullets, yellow, red):
         if red.colliderect(bullet):
             pygame.event.post(pygame.event.Event(RED_HIT))
             yellow_bullets.remove(bullet)
-
+        elif bullet.x > WIDTH:
+            yellow_bullets.remove(bullet)
 
     for bullet in red_bullets:
         bullet.x -= BULLET_VEL
         if yellow.colliderect(bullet):
             pygame.event.post(pygame.event.Event(YELLOW_HIT))
             red_bullets.remove(bullet)
+        elif bullet.x < 0:
+            red_bullets.remove(bullet)
+
 
 
 def main():
@@ -89,6 +94,10 @@ def main():
 
     red_bullets = []
     yellow_bullets = []
+
+red_health = 10
+yellow_health = 10
+
 
     clock = pygame.time.Clock()
     run = True
@@ -108,6 +117,10 @@ def main():
                     bullet = pygame.Rect(
                         red.x, red.y + red.height//2 - 2, 10, 5)
                     red_bullets.append(bullet)
+
+            if event.type == RED_HIT:
+
+            if event.type == YELOW_HIT:
 
         keys_pressed = pygame.key.get_pressed()
         yellow_handle_movement(keys_pressed, yellow)
